@@ -8,10 +8,10 @@ ESTADOS = ["MG", "RJ", "ES", "BA", "SP"]
 
 SHAPEFILE    = r"C:\Users\lima-\Downloads\Suprimidas\Dados\PRODES\Mata\desmatamento_recortado_acc.shp"
 PASTA_RASTER = r"C:\Users\lima-\Downloads\Suprimidas\Dados\Csoil_Estoque"
-SAIDA        = r"C:\Users\lima-\Downloads\Suprimidas\atlantica_1985soil.xlsx"
-SAIDA_SHP    = r"C:\Users\lima-\Downloads\Suprimidas\atlantica_1985soil.shp"
+SAIDA        = r"C:\Users\lima-\Downloads\Suprimidas\atlantica_1988soil.xlsx"
+SAIDA_SHP    = r"C:\Users\lima-\Downloads\Suprimidas\atlantica_1988soil.shp"
 
-ANO_RASTER = 1985  # raster fixo
+ANO_RASTER = 1988  # raster fixo
 # ──────────────────────────────────────────────────────────
 
 FATOR_C_CO2   = 3.67
