@@ -12,10 +12,10 @@ from exactextract import exact_extract
 ANO = "2025"
 ESTADOS = ["MA", "PA", "MG", "RJ", "ES", "BA", "SP"]
 
-PASTA_RASTER = r"C:\Users\lima-\Downloads\Suprimidas\Dados\Csoil_Estoque"
+PASTA_RASTER = r"C:\Users\lima-\Downloads\Suprimidas\Dados\TAGB_BGB_Estoque"
 PASTA_SHAPE  = r"C:\Users\lima-\Downloads\Suprimidas\Dados\Suprimidas\2025"
-SAIDA        = r"C:\Users\lima-\Downloads\Suprimidas\resultado_2025v.xlsx"
-SAIDA_SHP    = r"C:\Users\lima-\Downloads\Suprimidas\resultado_amazonia_2025.shp"
+SAIDA        = r"C:\Users\lima-\Downloads\Suprimidas\resultado_2025.xlsx"
+SAIDA_SHP    = r"C:\Users\lima-\Downloads\Suprimidas\resultado_2025.shp"
 # ──────────────────────────────────────────────────────────
 
 FATOR_C_CO2   = 3.67
@@ -35,7 +35,7 @@ geodataframes = []
 
 for semestre, padrao in SEMESTRES:
     for estado in ESTADOS:
-        raster    = rf"{PASTA_RASTER}\{estado}_Csoil_1985-2025\raster_Csoil_MgCha_{estado}_{ANO}.tif"
+        raster    = rf"{PASTA_RASTER}\{estado}_1985-2025\raster_TAGB_BGB_MgCha_{estado}_{ANO}.tif"
         shapefile = rf"{PASTA_SHAPE}\{padrao.format(estado=estado)}"
 
         print(f"Processando {estado} - {semestre} ({padrao})...")

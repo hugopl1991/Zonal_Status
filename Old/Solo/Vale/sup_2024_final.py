@@ -12,10 +12,10 @@ from exactextract import exact_extract
 ANO = "2024"
 ESTADOS = ["MA", "PA", "MG", "RJ", "ES", "BA", "SP"]
 
-PASTA_RASTER = r"C:\Users\lima-\Downloads\Suprimidas\Dados\TAGB_BGB_Estoque"
+PASTA_RASTER = r"C:\Users\lima-\Downloads\Suprimidas\Dados\Csoil_Estoque"
 PASTA_SHAPE  = r"C:\Users\lima-\Downloads\Suprimidas\Dados\Suprimidas\2024"
 SAIDA        = r"C:\Users\lima-\Downloads\Suprimidas\resultado_2024.xlsx"
-SAIDA_SHP    = r"C:\Users\lima-\Downloads\Suprimidas\amazonia_2024.shp"
+SAIDA_SHP    = r"C:\Users\lima-\Downloads\Suprimidas\resultado_2024.shp"
 # ──────────────────────────────────────────────────────────
 
 FATOR_C_CO2   = 3.67
@@ -25,7 +25,7 @@ resultados    = []
 geodataframes = []
 
 for estado in ESTADOS:
-    raster    = rf"{PASTA_RASTER}\{estado}_1985-2025\raster_TAGB_BGB_MgCha_{estado}_{ANO}.tif"
+    raster    = rf"{PASTA_RASTER}\{estado}_Csoil_1985-2025\raster_Csoil_MgCha_{estado}_{ANO}.tif"
     shapefile = rf"{PASTA_SHAPE}\sup24_v12_{estado}.shp"
 
     print(f"Processando {estado}...")
