@@ -37,8 +37,7 @@ AREA_PIXEL_HA = 0.09   # área de cada pixel em hectares (300 m × 300 m)
 CRS_AREA      = "EPSG:5880"  # Albers — para cálculo de área
 CRS_SAIDA     = "EPSG:4326"  # WGS-84 — para saída
 
-ESTADOS = ["MA", "PA", "MG", "ES"]
-#ESTADOS = ["MA", "PA", "MG", "RJ", "ES", "BA", "SP"]
+ESTADOS = ["MA", "PA", "MG", "RJ", "ES", "BA", "SP"]
 
 # Colunas do shapefile original que não devem ir para as saídas
 COLUNAS_EXCLUIR = ["Shape_Leng", "Shape_Area"]
@@ -279,8 +278,14 @@ def processar(ano: str, config_ano: dict, produto_key: str, produto_cfg: dict) -
                 log.info(f"✔ {lbl}")
 
             except Exception as exc:
-                log.warning(f"✗ {lbl}: {exc}")
-                log.debug(traceback.format_exc())
+                msg = str(exc)
+                # "No such file or directory" → log limpo, sem traceback
+                if "No such file or directory" in msg:
+                    arquivo = msg.split(": No such file")[0].strip()
+                    log.warning(f"✗ {lbl}: arquivo não encontrado → {arquivo}")
+                else:
+                    log.warning(f"✗ {lbl}: {exc}")
+                    log.debug(traceback.format_exc())
 
     return etapa_salvar(
         tabelas, geodataframes,
