@@ -1,0 +1,73 @@
+# =============================================================================
+# CONFIGURAÇÕES GLOBAIS
+# Compartilhadas entre Zonal_shp.py e Prodes_gpkg.py.
+# O valor de dir_raiz pode ser sobrescrito pela variável de ambiente DIR_RAIZ
+# (definida no .env e injetada pelo docker-compose).
+# =============================================================================
+global: # Raiz de mapeamento (dicionário) para os metadados do tipo globais 
+  dir_raiz:      "/dados"       # Raiz dos dados dentro do container
+  fator_c_co2:   3.67           # Fator de conversão MgC → MgCO2e (44/12)
+  area_pixel_ha: 0.09           # Área de cada pixel em hectares (300 m × 300 m)
+  crs_area:      "EPSG:5880"    # CRS métrico brasileiro — usado para calcular áreas
+  crs_saida:     "EPSG:4326"    # CRS geográfico WGS84 — padrão dos arquivos de saída
+  c_decimais:    2              # Quantidade de casa decimais usadas no arrendodamento.
+
+# =============================================================================
+# CATÁLOGO DE PRODUTOS
+# Define os dois rasters de estoque de carbono processados pelos scripts.
+# =============================================================================
+produtos: # Inicia dict global contendo definições matrizes das coberturas em imagens tiff
+
+  biomassa: # Instancia sub-chave de escopo atrelada as especificidades do modelo natural que agrupa o mapeamento por massa viva biológica
+    descricao:  "Biomassa (TAGB + BGB)"                         # Biomassa acima + abaixo do solo
+    dir_raster: "Dados/TAGB_BGB_Estoque"                        # Pasta raiz dos rasters de biomassa
+    subpasta:   "{estado}_TAGB_BGB_1985-2025"                   # Subpasta por estado
+    arquivo:    "raster_TAGB_BGB_MgCha_{estado}_{ano}.tif"      # Nome do arquivo por estado/ano
+
+  solo: # Instancia sub-chave paralela definindo comportamento do grupo correspondente às contagens do fator subterrâneo
+    descricao:  "Carbono do Solo (Csoil)"                       # Carbono orgânico do solo
+    dir_raster: "Dados/Csoil_Estoque"                           # Pasta raiz dos rasters de solo
+    subpasta:   "{estado}_Csoil_1985-2025"                      # Subpasta por estado
+    arquivo:    "raster_Csoil_MgCha_{estado}_{ano}.tif"         # Nome do arquivo por estado/ano
+
+# =============================================================================
+# CONFIGURAÇÕES DO SCRIPT ZONAL (Zonal_shp.py)
+# Processa shapefiles de supressão vegetal por estado e semestre.
+# =============================================================================
+zonal: # Inicializador do nó que contém iterações limitadoras do espaço
+  estados: ["MA", "PA", "MG", "ES"]   # Estados com supressões a processar
+
+  anos: # Tópico filho onde cadastra agrupamentos sazonais da evolução avaliada
+
+    # ── 2024: um shapefile único por estado, sem divisão semestral ──────────
+    "2024":
+      pasta_shape: "Dados/Suprimidas/2024"
+      semestres:
+        - ["", "sup24_v12_{estado}.shp"]
+
+    # ── 2025: quatro variantes de shapefile por estado ──────────────────────
+    # O 1º semestre tem estrutura de pasta diferente dos arquivos de 2º semestre.
+    # O 2º semestre possui três variantes (nat/exo, wgs84, correção qgis),
+    # todas processadas para garantir cobertura completa.
+    "2025":
+      pasta_shape: "Dados/Suprimidas/2025"
+      semestres:
+        - ["1sem", "supressão por estado 1sem/supressão por estado/sup_1sem_{estado}.shp"]
+        - ["2sem", "Sup_2sem_UF 14012026/Sup_2sem_UF 14012026/sup_2sem_{estado}_nat_wgs84_dis.shp"]
+        - ["2sem", "Sup_2sem_UF 14012026/Sup_2sem_UF 14012026/sup_2sem_{estado}_nat_wgs84_dis_qgis.shp"]
+        - ["2sem", "Sup_2sem_UF 14012026/Sup_2sem_UF 14012026/sup_2sem_{estado}_exo_wgs84_dis.shp"]
+
+# =============================================================================
+# CONFIGURAÇÕES DO SCRIPT PRODES (Prodes_gpkg.py)
+# Processa camadas de desmatamento do PRODES (Amazônia e Mata Atlântica).
+# O shapefile de máscara (Compilado.shp) é montado via DIR_MASCARA_PAI no .env.
+# =============================================================================
+prodes: # Ativa o objeto pai (dicionário matriz) atrelado estritamente as manipulações do prodes
+  estados:     ["MA", "PA", "MG", "RJ", "ES", "BA", "SP"]   # Estados com polígonos PRODES a serem processados
+  shp_mascara: "/mascara_dir/Compilado.shp"                  # Máscara da área de interesse (Vale)
+  gpkg_amazonia: "Dados/PRODES/prodes_biome_amazonia_v20260330.gpkg"     # PRODES Amazônia
+  gpkg_mata:     "Dados/PRODES/prodes_biome_mata_atlantica_v20260330.gpkg" # PRODES Mata Atlântica
+  state_gpkg: "state" # Padrao usado pelo Prodes no tabela de atributos
+  year_gpkg: "year" # Padrao usado pelo Prodes no tabela de atributos
+  # Aponta para o CSV em vez de listar tudo no YAML
+  processamentos_csv: "/tabelas/processamentos.csv"

@@ -1,0 +1,26 @@
+# =============================================================================
+# DEPENDÊNCIAS PYTHON
+# Versões fixadas (pinned) para garantir reprodutibilidade entre execuções.
+# Instaladas pelo Dockerfile após o GDAL do sistema ser detectado via
+# gdal-config --version (a versão Python do GDAL deve coincidir com a do SO).
+# =============================================================================
+
+# --- Geoespacial (vetor) -----------------------------------------------------
+geopandas==1.1.3        # GeoDataFrames: leitura, reprojeto e clip de vetores
+shapely==2.1.2          # Geometrias (dependência do GeoPandas)
+pyproj==3.7.2           # Reprojeção de CRS (dependência do GeoPandas)
+pyogrio==0.11.1         # Backend de I/O para GeoPandas (substitui Fiona)
+
+# --- Geoespacial (raster) ----------------------------------------------------
+rasterio==1.5.0         # Leitura de rasters GeoTIFF e acesso ao CRS/transform
+exactextract==0.3.0     # Extração zonal de estatísticas raster × vetor
+
+# --- Dados tabulares ---------------------------------------------------------
+pandas==3.0.0           # DataFrames para consolidação e exportação dos resultados
+numpy==2.4.2            # Arrays numéricos (dependência de rasterio e pandas)
+
+# --- Exportação --------------------------------------------------------------
+openpyxl==3.1.5         # Escrita de arquivos .xlsx (usado por pandas.to_excel)
+
+# --- Configuração ------------------------------------------------------------
+PyYAML==6.0.1           # Leitura do config.yaml

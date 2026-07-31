@@ -1,0 +1,4 @@
+chave,nome,tipo,ano_inicio,ano_fim,ano_raster,gpkg,layer,saida_base
+mata_acc,Mata Atlantica - Acumulado,acumulado,,,1988,mata,accumulated_deforestation_2000,atlantica_acc
+acc_bio,Amazonia - Acumulado BIO,acumulado,,,1988,amazonia,accumulated_deforestation_2007_biome,amazonia_acc_bio
+acc_nf,Amazonia - Acumulado BIO,acumulado,,,1988,amazonia,accumulated_deforestation_2000_nf_biome,amazonia_acc_nf

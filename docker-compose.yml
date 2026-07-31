@@ -1,0 +1,69 @@
+# =============================================================================
+# Análise Zonal – Estoque de Carbono (Vale)
+# =============================================================================
+# Dois serviços compartilham a mesma imagem Docker (carbono-geo:latest):
+#   zonal  → executa Zonal_shp.py  (shapefiles de supressão vegetal)
+#   prodes → executa Prodes_gpkg.py (desmatamento PRODES)
+#
+# Volumes são definidos via variáveis do arquivo .env (copie _env para .env).
+# Ambos os serviços têm restart: "no" — rodam uma vez e encerram.
+# =============================================================================
+
+services:
+
+  # ===========================================================================
+  # SERVIÇO: zonal
+  # Constrói a imagem carbono-geo:latest a partir do Dockerfile local e executa
+  # a análise zonal sobre os shapefiles de supressão vegetal.
+  # Este serviço é o único que faz o build — o serviço "prodes" reutiliza
+  # a imagem já construída aqui.
+  # ===========================================================================
+  zonal:
+    build:
+      context: .              # Dockerfile lido na pasta atual
+      dockerfile: Dockerfile
+    image: carbono-geo:latest
+    container_name: zonal_shp
+    command: python scripts/Zonal_shp.py
+
+    volumes:
+      # Dados de entrada e saída (rasters, shapefiles, resultados, logs)
+      - ${DIR_SUPRIMIDAS}:/dados
+      # Pasta que contém o Compilado.shp (shapefile de máscara da Vale)
+      - ${DIR_MASCARA_PAI}:/mascara_dir
+      # Configurações dos produtos e caminhos (somente leitura no container)
+      - ./config.yaml:/app/config.yaml
+
+    environment:
+      # Raiz dos dados dentro do container
+      - DIR_RAIZ=/dados
+
+    restart: "no"   # Execução única — não reinicia em caso de falha ou término
+
+  # ===========================================================================
+  # SERVIÇO: prodes
+  # Reutiliza a imagem carbono-geo:latest gerada pelo serviço "zonal" e executa
+  # a análise sobre os GeoPackages do PRODES (Amazônia e Mata Atlântica).
+  # Só inicia após o serviço "zonal" terminar (depends_on).
+  # ===========================================================================
+  prodes:
+    image: carbono-geo:latest   # Reutiliza a imagem do serviço "zonal" (sem rebuild)
+    container_name: prodes_gpkg
+    command: python scripts/Prodes_Overlay_one_year.py
+
+    volumes:
+      # Caminho da tabela dos processamento pelo PRODES
+      - ${DIR_TABELAS}:/tabelas
+      # Mesmos volumes do serviço "zonal" — dados e máscara compartilhados
+      - ${DIR_SUPRIMIDAS}:/dados
+      - ${DIR_MASCARA_PAI}:/mascara_dir
+      - ./config.yaml:/app/config.yaml
+
+    environment:
+      - DIR_RAIZ=/dados
+
+    restart: "no"
+
+    depends_on:
+      zonal:
+        condition: service_completed_successfully
