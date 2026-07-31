@@ -1,0 +1,8 @@
+chave,nome,tipo,ano_inicio,ano_fim,ano_raster,gpkg,layer,saida_base
+anual_bio,Amazonia - Anual BIO,anual,2008,2025,,amazonia,yearly_deforestation_biome,amazonia_bio
+res_bio,Amazonia - Residuos BIO,anual,2010,2025,,amazonia,residual_biome,amazonia_res_bio
+sa625_bio,Amazonia - SA625 BIO,anual,2021,2025,,amazonia,yearly_deforestation_smaller_than_625ha_biome,amazonia_sa625
+anual_nf,Amazonia - Anual NF,anual,2002,2024,,amazonia,yearly_deforestation_nf_biome,amazonia_nf
+res_nf,Amazonia - Residuos NF,anual,2018,2025,,amazonia,residual_nf_biome,amazonia_res_nf
+mata_anual,Mata Atlantica - Anual,anual,2004,2024,,mata,yearly_deforestation,atlantica_anual
+mata_res,Mata Atlantica - Residuos,anual,2018,2024,,mata,residual,atlantica_res
